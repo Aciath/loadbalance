@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+        nginx_01:
+          container_name: web01
+          image: nginx
+          restart: always
+          volumes:
+               - ./nginx/www01:/usr/share/nginx/html/:rw
+
+        nginx_02:
+          container_name: web02
+          image: nginx
+          restart: always
+          volumes:
+               - ./nginx/www02:/usr/share/nginx/html/:rw
+              
+        load_balance:
+          container_name: load_balance
+          image: haproxy
+          restart: always
+          ports:
+               - 8082:8082
+               - 80:80
+          links:
+               - nginx_01
+               - nginx_02
+          volumes:
+               - ./haproxy/:/usr/local/etc/haproxy/:rw
